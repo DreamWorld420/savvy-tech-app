@@ -1,66 +1,76 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { Dialog, DialogContent, DialogTrigger } from "@/components/Dialog";
+import Table from "@/components/Table";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+
+interface TableRow {
+	title: string;
+	subtitle: string;
+	createdOn: Date;
+}
+
+const columnHelper = createColumnHelper<TableRow>();
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+	const columns = useMemo(
+		() => [
+			columnHelper.accessor("title", {
+				header: "Title",
+			}),
+			columnHelper.accessor("subtitle", {
+				header: "Subtitle",
+			}),
+			columnHelper.accessor("createdOn", {
+				header: "Date Created",
+				cell: (props) =>
+					new Intl.DateTimeFormat("en-GB", {
+						dateStyle: "medium",
+						timeStyle: "medium",
+					}).format(props.getValue()),
+			}),
+			columnHelper.display({
+				header: "actions",
+				cell: () => {
+					return (
+						<div className="flex gap-2 items-center">
+							<Dialog>
+								<DialogTrigger>Edit</DialogTrigger>
+								<DialogContent>
+									<div className="p-5 bg-white">hello</div>
+								</DialogContent>
+							</Dialog>
+						</div>
+					);
+				},
+			}),
+		],
+		[]
+	);
+
+	const [tableData, setTableData] = useState<TableRow[]>([
+		{
+			title: "A",
+			subtitle: "ASubtitle",
+			createdOn: new Date(),
+		},
+		{
+			title: "B",
+			subtitle: "BSubtitle",
+			createdOn: new Date(),
+		},
+		{
+			title: "C",
+			subtitle: "CSubtitle",
+			createdOn: new Date(),
+		},
+		{
+			title: "D",
+			subtitle: "DSubtitle",
+			createdOn: new Date(),
+		},
+	]);
+
+	return <Table columns={columns} data={tableData} />;
 }
