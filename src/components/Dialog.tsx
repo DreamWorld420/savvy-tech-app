@@ -147,7 +147,10 @@ export const DialogContent = React.forwardRef<
 
 	return (
 		<FloatingPortal>
-			<FloatingOverlay className="Dialog-overlay" lockScroll>
+			<FloatingOverlay
+				className="Dialog-overlay bg-white/50 flex items-center justify-center"
+				lockScroll
+			>
 				<FloatingFocusManager context={floatingContext}>
 					<div
 						ref={ref}
